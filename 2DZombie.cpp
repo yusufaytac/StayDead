@@ -49,6 +49,7 @@ int main()
 
     
     const int SizeOfMedic = 1;
+    const int SizeOfPoison = 10;
     
     // medical kit texture
     Texture2D Medic = LoadTexture("textures/medicalkit.png");
@@ -92,7 +93,21 @@ int main()
 
     // poison texture
     Texture2D Poison = LoadTexture("textures/poison.png");
-    AnimData PoisonData;
+    AnimData PoisonData{
+        {0, 0, Poison.width, Poison.height},
+        {0, 0},
+        0,
+        0,
+        0   
+    };
+    // poison 1
+    AnimData Poison1[SizeOfPoison]{PoisonData};
+    for (int i = 0; i<SizeOfPoison; i++)
+    {
+        Poison1[i].Pos.x = PoisonData.Pos.x +90;
+        Poison1[i].Pos.y = -(i * 2000);
+    };
+
 
 
     
@@ -223,8 +238,14 @@ int main()
             DrawTexture(Medic, Medic4[i].Pos.x, Medic4[i].Pos.y, WHITE);
        }
 
+       // update poison
+       for (int i = 0; i<SizeOfPoison; i++)
+       {
+            Poison1[i].Pos.y = Poison1[i].Pos.y + Velocity * DeltaTime;
+            DrawTexture(Poison, Poison1[i].Pos.x, Poison1[i].Pos.y, WHITE);
+       }
 
-       //DrawTexture(Poison, 50, 50, WHITE);
+       
 
        
       
