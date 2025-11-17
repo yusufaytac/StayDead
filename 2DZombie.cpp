@@ -28,8 +28,12 @@ int main()
     const float ZombieRealWidth = 50.0f; 
     const float ZombieRealHeight = 70.0f;
 
+    Color MyColor = { 20, 30, 50, 255 };
+
     // initialize window
     InitWindow(WindowDimension[0], WindowDimension[1], "Stay Dead!");
+
+    Texture2D City = LoadTexture("textures/city-update.png");
 
     // zombie idle texture
     Texture2D ZombieIdle = LoadTexture("textures/Idle3.png");
@@ -52,6 +56,8 @@ int main()
             0.0 // float move time
     };
 
+    // health bar texture
+    Texture2D Bar = LoadTexture("textures/healthbar.png");
     
     const int SizeOfMedic = 1;
     const int SizeOfPoison = 10;
@@ -69,7 +75,7 @@ int main()
     AnimData Medic1[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {   
-        Medic1[i].Pos.x = MedicData.Pos.x +60;
+        Medic1[i].Pos.x = MedicData.Pos.x +40;
         Medic1[i].Pos.y = -(i * 600);
 
     }
@@ -77,7 +83,7 @@ int main()
     AnimData Medic2[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic2[i].Pos.x = MedicData.Pos.x + 140;
+        Medic2[i].Pos.x = MedicData.Pos.x + 120;
         Medic2[i].Pos.y = -(i * 750);
     }
 
@@ -85,22 +91,22 @@ int main()
     AnimData Medic3[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic3[i].Pos.x = MedicData.Pos.x + 220;
+        Medic3[i].Pos.x = MedicData.Pos.x + 230;
         Medic3[i].Pos.y = -(i * 900);
     }
     // medic 4
     AnimData Medic4[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic4[i].Pos.x = MedicData.Pos.x + 300;
+        Medic4[i].Pos.x = MedicData.Pos.x + 320;
         Medic4[i].Pos.y = -(i * 1100);
     }
 
 
 
 
-
-    
+   
+    int Health = 0;
     bool GameOver = false;
 
     SetTargetFPS(60);
@@ -108,12 +114,13 @@ int main()
     {
         
        BeginDrawing();
-       ClearBackground(WHITE);
-    
-
+       ClearBackground(BLACK);
+       DrawTexture(City, 0, 0, WHITE);
+       
        // delta time 
        const float DeltaTime = GetFrameTime();
        bool IsWalking = false;
+       
        
        // character collision
        Rectangle PlayerCollisionBox;
@@ -209,8 +216,9 @@ int main()
             // medic1 collision
             Rectangle MedicBox = {Medic1[i].Pos.x, Medic1[i].Pos.y, Medic.width, Medic.height};
             if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
-            {
-                GameOver = true;
+            {   
+                Medic1[i].Pos.y = -150; // return
+                Health = Health + 1;
             }
        }
        // update medic2
@@ -225,8 +233,9 @@ int main()
             // medic2 collision
             Rectangle MedicBox = {Medic2[i].Pos.x, Medic2[i].Pos.y, Medic.width, Medic.height};
             if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
-            {
-                GameOver = true;
+            {   
+                Medic2[i].Pos.y = -150; // return
+                Health = Health + 1;
             }
        }
        // update medic3
@@ -241,8 +250,9 @@ int main()
             // medic3 collision
             Rectangle MedicBox = {Medic3[i].Pos.x, Medic3[i].Pos.y, Medic.width, Medic.height};
             if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
-            {
-                GameOver = true;
+            {   
+                Medic3[i].Pos.y = -150; // return
+                Health = Health + 1;
             }
        }
        // update medic4
@@ -257,16 +267,20 @@ int main()
             // medic4 collision
             Rectangle MedicBox = {Medic4[i].Pos.x, Medic4[i].Pos.y, Medic.width, Medic.height};
             if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
-            {
-                GameOver = true;
+            {   
+                Medic4[i].Pos.y = -150; // return
+                Health = Health + 1;
             }
        }
-
+       if(Health == 3)
+       {
+            GameOver = true;
+       }
 
        }
        else
        {
-            DrawText("GAME OVER", WindowDimension[0]/2-60, WindowDimension[1]/2, 20, RED);
+            DrawText("GAME OVER!", WindowDimension[0]/2-60, WindowDimension[1]/2+20, 20, WHITE);
        }
 
        
