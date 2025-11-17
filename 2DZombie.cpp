@@ -23,6 +23,11 @@ int main()
     int Medic3Vel = 190;
     int Medic4Vel = 170;
 
+    const float ZombiePaddingX = 39.0f;  
+    const float ZombiePaddingY = 57.0f;  
+    const float ZombieRealWidth = 50.0f; 
+    const float ZombieRealHeight = 70.0f;
+
     // initialize window
     InitWindow(WindowDimension[0], WindowDimension[1], "Stay Dead!");
 
@@ -52,7 +57,7 @@ int main()
     const int SizeOfPoison = 10;
     
     // medical kit texture
-    Texture2D Medic = LoadTexture("textures/medicalkit.png");
+    Texture2D Medic = LoadTexture("textures/medicalkit-update.png");
     AnimData MedicData{
         {0, 0, Medic.width, Medic.height},
         {0, 0},
@@ -64,7 +69,7 @@ int main()
     AnimData Medic1[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {   
-        Medic1[i].Pos.x = MedicData.Pos.x - 40;
+        Medic1[i].Pos.x = MedicData.Pos.x +60;
         Medic1[i].Pos.y = -(i * 600);
 
     }
@@ -72,7 +77,7 @@ int main()
     AnimData Medic2[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic2[i].Pos.x = MedicData.Pos.x + 55;
+        Medic2[i].Pos.x = MedicData.Pos.x + 140;
         Medic2[i].Pos.y = -(i * 750);
     }
 
@@ -80,38 +85,23 @@ int main()
     AnimData Medic3[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic3[i].Pos.x = MedicData.Pos.x + 165;
+        Medic3[i].Pos.x = MedicData.Pos.x + 220;
         Medic3[i].Pos.y = -(i * 900);
     }
     // medic 4
     AnimData Medic4[SizeOfMedic]{MedicData};
     for (int i = 0; i<SizeOfMedic; i++)
     {
-        Medic4[i].Pos.x = MedicData.Pos.x + 270;
+        Medic4[i].Pos.x = MedicData.Pos.x + 300;
         Medic4[i].Pos.y = -(i * 1100);
     }
 
-    // poison texture
-    Texture2D Poison = LoadTexture("textures/poison.png");
-    AnimData PoisonData{
-        {0, 0, Poison.width, Poison.height},
-        {0, 0},
-        0,
-        0,
-        0   
-    };
-    // poison 1
-    AnimData Poison1[SizeOfPoison]{PoisonData};
-    for (int i = 0; i<SizeOfPoison; i++)
-    {
-        Poison1[i].Pos.x = PoisonData.Pos.x +90;
-        Poison1[i].Pos.y = -(i * 2000);
-    };
+
 
 
 
     
-    
+    bool GameOver = false;
 
     SetTargetFPS(60);
     while(!WindowShouldClose())
@@ -124,7 +114,17 @@ int main()
        // delta time 
        const float DeltaTime = GetFrameTime();
        bool IsWalking = false;
+       
+       // character collision
+       Rectangle PlayerCollisionBox;
+       PlayerCollisionBox.x = ZombieWalkData.Pos.x + ZombiePaddingX;
+       PlayerCollisionBox.y = ZombieWalkData.Pos.y + ZombiePaddingY;
+       PlayerCollisionBox.width = ZombieRealWidth;
+       PlayerCollisionBox.height = ZombieRealHeight;
 
+
+       if(!GameOver)
+       { 
        // ıdle animation
        if(!IsWalking)
        {
@@ -206,6 +206,12 @@ int main()
                 Medic1[i].Pos.y = -150; // return
             }
             DrawTexture(Medic, Medic1[i].Pos.x, Medic1[i].Pos.y, WHITE);
+            // medic1 collision
+            Rectangle MedicBox = {Medic1[i].Pos.x, Medic1[i].Pos.y, Medic.width, Medic.height};
+            if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
+            {
+                GameOver = true;
+            }
        }
        // update medic2
        for (int i = 0; i<SizeOfMedic; i++)
@@ -216,6 +222,12 @@ int main()
                 Medic2[i].Pos.y = -150; // return
             }
             DrawTexture(Medic, Medic2[i].Pos.x, Medic2[i].Pos.y, WHITE);
+            // medic2 collision
+            Rectangle MedicBox = {Medic2[i].Pos.x, Medic2[i].Pos.y, Medic.width, Medic.height};
+            if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
+            {
+                GameOver = true;
+            }
        }
        // update medic3
        for (int i = 0; i<SizeOfMedic; i++)
@@ -226,6 +238,12 @@ int main()
                 Medic3[i].Pos.y = -150; // return
             }
             DrawTexture(Medic, Medic3[i].Pos.x, Medic3[i].Pos.y, WHITE);
+            // medic3 collision
+            Rectangle MedicBox = {Medic3[i].Pos.x, Medic3[i].Pos.y, Medic.width, Medic.height};
+            if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
+            {
+                GameOver = true;
+            }
        }
        // update medic4
        for (int i = 0; i<SizeOfMedic; i++)
@@ -236,15 +254,22 @@ int main()
                 Medic4[i].Pos.y = -150; // return
             }
             DrawTexture(Medic, Medic4[i].Pos.x, Medic4[i].Pos.y, WHITE);
+            // medic4 collision
+            Rectangle MedicBox = {Medic4[i].Pos.x, Medic4[i].Pos.y, Medic.width, Medic.height};
+            if(CheckCollisionRecs(PlayerCollisionBox, MedicBox))
+            {
+                GameOver = true;
+            }
        }
 
-       // update poison
-       for (int i = 0; i<SizeOfPoison; i++)
+
+       }
+       else
        {
-            Poison1[i].Pos.y = Poison1[i].Pos.y + Velocity * DeltaTime;
-            DrawTexture(Poison, Poison1[i].Pos.x, Poison1[i].Pos.y, WHITE);
+            DrawText("GAME OVER", WindowDimension[0]/2-60, WindowDimension[1]/2, 20, RED);
        }
 
+       
        
 
        
@@ -252,7 +277,7 @@ int main()
 
        EndDrawing();
     }
-    UnloadTexture(Poison);
+
     UnloadTexture(Medic);
     UnloadTexture(ZombieIdle);
     UnloadTexture(ZombieWalk);
