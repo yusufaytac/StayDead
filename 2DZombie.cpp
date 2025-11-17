@@ -23,10 +23,10 @@ int main()
     int Medic3Vel = 190;
     int Medic4Vel = 170;
 
-    const float ZombiePaddingX = 39.0f;  
-    const float ZombiePaddingY = 57.0f;  
-    const float ZombieRealWidth = 50.0f; 
-    const float ZombieRealHeight = 70.0f;
+    const float ZombiePaddingX = 39.0;  
+    const float ZombiePaddingY = 57.0;  
+    const float ZombieRealWidth = 50.0; 
+    const float ZombieRealHeight = 70.0;
 
     
 
@@ -114,6 +114,8 @@ int main()
 
 
 
+
+
    
     int Health = 1;
     bool GameOver = false;
@@ -129,7 +131,7 @@ int main()
        // delta time 
        const float DeltaTime = GetFrameTime();
        bool IsWalking = false;
-       
+      
        
        // character collision
        Rectangle PlayerCollisionBox;
@@ -137,7 +139,8 @@ int main()
        PlayerCollisionBox.y = ZombieWalkData.Pos.y + ZombiePaddingY;
        PlayerCollisionBox.width = ZombieRealWidth;
        PlayerCollisionBox.height = ZombieRealHeight;
-       
+
+        
        // update health bar
        Rectangle BarDestRec;
        BarDestRec.x = BarData.Pos.x;
@@ -168,7 +171,7 @@ int main()
        }
        
        // walk animation
-       if(IsKeyDown(KEY_D))
+       if(IsKeyDown(KEY_D) && PlayerCollisionBox.x <= 345)
        {    
             IsWalking = true;
             ZombieWalkData.Rec.width = FrameWidth;
@@ -189,7 +192,7 @@ int main()
        }
 
 
-       if(IsKeyDown(KEY_A))
+       if(IsKeyDown(KEY_A) && PlayerCollisionBox.x >= -15)
        {    
             IsWalking = true;
             ZombieWalkData.Rec.width = -FrameWidth;
