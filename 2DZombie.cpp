@@ -28,11 +28,12 @@ int main()
     const float ZombieRealWidth = 50.0f; 
     const float ZombieRealHeight = 70.0f;
 
-    Color MyColor = { 20, 30, 50, 255 };
+    
 
     // initialize window
     InitWindow(WindowDimension[0], WindowDimension[1], "Stay Dead!");
 
+    // background texture
     Texture2D City = LoadTexture("textures/city-update.png");
 
     // zombie idle texture
@@ -58,9 +59,17 @@ int main()
 
     // health bar texture
     Texture2D Bar = LoadTexture("textures/healthbar.png");
+    const int BarFrameHeight = Bar.height / 5;
+    AnimData BarData{
+            {0, 0, Bar.width, BarFrameHeight},
+            {10, 10},
+            0, 
+            0.0, 
+            0.0
+    };
     
     const int SizeOfMedic = 1;
-    const int SizeOfPoison = 10;
+    
     
     // medical kit texture
     Texture2D Medic = LoadTexture("textures/medicalkit-update.png");
@@ -106,7 +115,7 @@ int main()
 
 
    
-    int Health = 0;
+    int Health = 1;
     bool GameOver = false;
 
     SetTargetFPS(60);
@@ -128,7 +137,15 @@ int main()
        PlayerCollisionBox.y = ZombieWalkData.Pos.y + ZombiePaddingY;
        PlayerCollisionBox.width = ZombieRealWidth;
        PlayerCollisionBox.height = ZombieRealHeight;
-
+       
+       // update health bar
+       Rectangle BarDestRec;
+       BarDestRec.x = BarData.Pos.x;
+       BarDestRec.y = BarData.Pos.y;
+       BarDestRec.width = BarData.Rec.width * 2.0;  
+       BarDestRec.height = BarData.Rec.height * 2.0;
+       BarData.Rec.y = -Health * BarFrameHeight;
+       DrawTexturePro(Bar, BarData.Rec, BarDestRec, {0, 0}, 0.0, WHITE);
 
        if(!GameOver)
        { 
@@ -170,6 +187,7 @@ int main()
             }
             
        }
+
 
        if(IsKeyDown(KEY_A))
        {    
@@ -272,7 +290,7 @@ int main()
                 Health = Health + 1;
             }
        }
-       if(Health == 3)
+       if(Health == 5)
        {
             GameOver = true;
        }
