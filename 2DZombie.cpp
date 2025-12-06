@@ -34,7 +34,7 @@ int main()
     InitWindow(WindowDimension[0], WindowDimension[1], "Stay Dead!");
 
     // background texture
-    Texture2D City = LoadTexture("textures/city-update.png");
+    Texture2D Background = LoadTexture("textures/zbackground.png");
 
     // zombie idle texture
     Texture2D ZombieIdle = LoadTexture("textures/Idle3.png");
@@ -126,7 +126,7 @@ int main()
         
        BeginDrawing();
        ClearBackground(BLACK);
-       DrawTexture(City, 0, 0, WHITE);
+       DrawTexture(Background, 0, 0, WHITE);
        
        // delta time 
        const float DeltaTime = GetFrameTime();
@@ -313,6 +313,7 @@ int main()
        EndDrawing();
     }
 
+    UnloadTexture(Background);
     UnloadTexture(Medic);
     UnloadTexture(ZombieIdle);
     UnloadTexture(ZombieWalk);
